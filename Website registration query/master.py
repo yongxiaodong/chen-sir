@@ -9,8 +9,9 @@ def get_code(domain_name):
 
     driver.get('http://www.beian.gov.cn/portal/registerSystemInfo')
     time.sleep(1)
-    driver.find_element_by_xpath('//*[@id="websites"]').send_keys(domain_name)
-    img = driver.find_element_by_xpath('//*[@id="websitesform"]/div/div[2]/div/img')
+    driver.find_element_by_xpath('//*[@id="myTab"]/li[2]/a').click()
+    driver.find_element_by_xpath('//*[@id="domain"]').send_keys(domain_name)
+    img = driver.find_element_by_xpath('//*[@id="domainform"]/div/div[2]/div/img')
     img.screenshot('./img/b.png')
 
 def identification_code():
@@ -44,20 +45,21 @@ def test_code(result):
         'token': dd[0]
     }
 
-    url = f'http://www.beian.gov.cn/portal/verCode?t=1&code={result}'
+    url = f'http://www.beian.gov.cn/portal/verCode?t=2&code={result}'
     r2 = requests.post(url=url, data=data, headers=headers)
     if r2.text == '0':
         print(f'验证码测试失败,开始重新测试')
         return 0
     else:
         print(f'验证码测试正确')
-        driver.find_element_by_xpath('//*[@id="ver3"]').send_keys(result)
-    #   driver.find_element_by_xpath('//*[@id="websitesform"]/div/div[3]/div/button').click()
+        driver.find_element_by_xpath('//*[@id="ver2"]').send_keys(result)
+        time.sleep(0.5)
+        driver.find_element_by_xpath('//*[@id="domainform"]/div/div[3]/div/button').click()
         return 1
 
 if __name__ == '__main__':
     driver = webdriver.Chrome()
-    domain_name = '90qj.com'
+    domain_name = 'szyll.com'
     while True:
         print(f'当前处理{domain_name}')
         get_code(domain_name)
